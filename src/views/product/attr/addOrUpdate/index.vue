@@ -1,0 +1,90 @@
+<template>
+  <div>
+    <el-card class="container">
+      <el-form label-width="80" inline :model="attr" :rules="rules">
+        <el-form-item label="属性名" prop="attrName">
+          <el-input placeholder="请输入属性名" v-model="attr.attrName" />
+        </el-form-item>
+      </el-form>
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        :disabled="!attr.attrName"
+        @click="addAttrValue"
+        >添加属性值</el-button
+      >
+
+      <el-table
+        :data="attrValueList"
+        border
+        class="container-table"
+        v-loading="loading"
+      >
+        <el-table-column label="序号" width="50" type="index" align="center">
+        </el-table-column>
+        <el-table-column label="属性值名称">
+          <template v-slot="{ row, $index }">
+            <el-input
+              ref="input"
+              size="mini"
+              placeholder="请输入属性值名称"
+              v-model="attr.valueName"
+              @blur="setAttrValue($index)"
+            ></el-input>
+            <span>{{ row.valueName }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作">
+          <template v-slot="{ row }">
+            <el-tooltip content="删除属性值" placement="top">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button type="primary">确定</el-button>
+      <el-button>取消</el-button>
+    </el-card>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "AddOrUpdate",
+  data() {
+    return {
+      attrValueList: [],
+      loading: false,
+      attr: {
+        attrName: "",
+        valueName: "",
+      },
+      rules: {
+        attrName: [
+          { required: true, message: "请输入属性名", trigger: "blur" },
+        ],
+      },
+    };
+  },
+  methods: {
+    addAttrValue() {
+      this.attrValueList.push({});
+      this.$nextTick(() => {
+        this.$refs.input.focus();
+      });
+    },
+    setAttrValue(index) {
+  
+      this.attrValueList[index].valueName = this.attr.valueName;
+    },
+  },
+};
+</script>
+
+<style>
+</style>
