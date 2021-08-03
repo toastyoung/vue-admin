@@ -25,13 +25,20 @@
         <el-table-column label="属性值名称">
           <template v-slot="{ row, $index }">
             <el-input
-              ref="input"
+              :ref="$index"
               size="mini"
               placeholder="请输入属性值名称"
               v-model="attr.valueName"
-              @blur="setAttrValue($index)"
+              @blur="setAttrValue(row, $index)"
+              @keyup.enter.native="$event.target.blur()"
+              v-show="row.isEdit"
             ></el-input>
-            <span>{{ row.valueName }}</span>
+            <span
+              class="attrValueText"
+              v-show="!row.isEdit"
+              @click="showEdit(row, $index)"
+              >{{ row.valueName }}</span
+            >
           </template>
         </el-table-column>
 
@@ -73,18 +80,39 @@ export default {
   },
   methods: {
     addAttrValue() {
-      this.attrValueList.push({});
+      this.attrValueList.push({
+        valueName: "",
+        isEdit: true,
+      });
       this.$nextTick(() => {
-        this.$refs.input.focus();
+        this.$refs[this.attrValueList.length - 1].focus();
       });
     },
-    setAttrValue(index) {
-  
-      this.attrValueList[index].valueName = this.attr.valueName;
+    setAttrValue(row, index) {
+      const { valueName } = this.attr;
+      if (!valueName) {
+        this.attrValueList.splice(index, 1);
+        return;
+      }
+
+      row.valueName = valueName;
+      row.isEdit = false;
+
+      this.attr.valueName = "";
+    },
+    showEdit(row, index) {
+      row.isEdit = true;
+      this.attr.valueName = row.valueName;
+      this.$nextTick(() => {
+        this.$refs[index].focus();
+      });
     },
   },
 };
 </script>
 
 <style>
+.attrValueText {
+  display: block;
+}
 </style>
