@@ -1,6 +1,12 @@
 <template>
   <el-card class="container">
-    <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id" @click="$emit('updateIsShowAttrlist',false)">添加属性</el-button>
+    <el-button
+      type="primary"
+      icon="el-icon-plus"
+      :disabled="!category3Id"
+      @click="$emit('updateIsShowAttrlist', false)"
+      >添加属性</el-button
+    >
     <el-table
       :data="attrList"
       border
@@ -28,15 +34,23 @@
               type="warning"
               icon="el-icon-edit"
               size="mini"
+              @click="$emit('updateIsShowAttrlist', false)"
             ></el-button>
           </el-tooltip>
-          <el-tooltip content="删除属性" placement="top">
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              size="mini"
-            ></el-button>
-          </el-tooltip>
+          <el-popconfirm
+            icon="el-icon-info"
+            icon-color="red"
+            title="确定删除吗？"
+            @onConfirm="delAttr(row.id)"
+          >
+            <el-tooltip content="删除属性" placement="top" slot="reference">
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+              ></el-button>
+            </el-tooltip>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -45,7 +59,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { reqGetAttrList } from "@/api/product/attr";
+import { reqGetAttrList, reqDelAttr } from "@/api/product/attr";
 
 export default {
   name: "Attrlist",
@@ -60,16 +74,32 @@ export default {
   },
   watch: {
     category3Id: {
-      async handler(category3Id) {
-        if (!category3Id) return;
-        const { category1Id, category2Id } = this;
-        const attrList = await reqGetAttrList({
-          category1Id,
-          category2Id,
-          category3Id,
-        });
-        this.attrList = attrList;
-      },
+      handler: "getAttrList",
+      immediate: true,
+    },
+  },
+  methods: {
+    // 删除属性
+    async delAttr(id) {
+      await reqDelAttr(id);
+
+      this.$message({
+        type: "success",
+        message: "删除成功",
+      });
+
+      this.getAttrList(this.category3Id);
+    },
+    // 获取属性列表
+    async getAttrList(category3Id) {
+      if (!category3Id) return;
+      const { category1Id, category2Id } = this;
+      const attrList = await reqGetAttrList({
+        category1Id,
+        category2Id,
+        category3Id,
+      });
+      this.attrList = attrList;
     },
   },
 };

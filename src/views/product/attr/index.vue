@@ -2,10 +2,13 @@
   <div>
     <CategorySelector :disabled="!isShowAttrlist" />
     <Attrlist
-      v-show="isShowAttrlist"
+      v-if="isShowAttrlist"
       @updateIsShowAttrlist="updateIsShowAttrlist"
     />
-    <AddOrUpdate v-show="!isShowAttrlist" />
+    <AddOrUpdate
+      v-if="!isShowAttrlist"
+      @updateIsShowAttrlist="updateIsShowAttrlist"
+    />
   </div>
 </template>
 
@@ -17,7 +20,7 @@ export default {
   name: "Attr",
   data() {
     return {
-      isShowAttrlist: false,
+      isShowAttrlist: true,
     };
   },
   components: {

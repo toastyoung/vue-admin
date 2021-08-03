@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card class="container">
-      <el-form label-width="80" inline :model="attr" :rules="rules">
+      <el-form label-width="80" inline :model="attr" :rules="rules" ref="form">
         <el-form-item label="属性名" prop="attrName">
           <el-input placeholder="请输入属性名" v-model="attr.attrName" />
         </el-form-item>
@@ -43,24 +43,29 @@
         </el-table-column>
 
         <el-table-column label="操作">
-          <template v-slot="{ row }">
-            <el-tooltip content="删除属性值" placement="top">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="mini"
-              ></el-button>
-            </el-tooltip>
+          <template v-slot="{ row, $index }">
+            <el-button type="text" @click="delAttrValue($index)">
+              <el-tooltip content="删除属性值" placement="top">
+                <el-button
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="mini"
+                ></el-button>
+              </el-tooltip>
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-button type="primary">确定</el-button>
-      <el-button>取消</el-button>
+      <el-button type="primary" @click="addAttr">确定</el-button>
+      <el-button @click="goBack">取消</el-button>
     </el-card>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+import { reqSaveAttr } from "@/api/product/attr";
+
 export default {
   name: "AddOrUpdate",
   data() {
@@ -77,6 +82,9 @@ export default {
         ],
       },
     };
+  },
+  computed: {
+    ...mapState("category", ["category3Id"]),
   },
   methods: {
     addAttrValue() {
@@ -106,6 +114,54 @@ export default {
       this.$nextTick(() => {
         this.$refs[index].focus();
       });
+    },
+    // 删除属性值
+    delAttrValue(index) {
+      this.$confirm("是否删除该属性值?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        this.attrValueList.splice(index, 1);
+        this.$message({
+          type: "success",
+          message: "删除成功!",
+        });
+      });
+    },
+    // 增加属性
+    addAttr() {
+      const {
+        attrValueList,
+        attr: { attrName },
+      } = this;
+      this.$refs.form.validate(async (valid) => {
+        if (!valid) return;
+        if (!attrValueList.length) {
+          this.$message({
+            type: "error",
+            message: "请至少添加一个属性值",
+          });
+          return;
+        }
+        const attr = {
+          attrName: attrName,
+          attrValueList: attrValueList,
+          categoryId: this.category3Id,
+          categoryLevel: 3,
+        };
+        await reqSaveAttr(attr);
+        this.goBack();
+      });
+    },
+    // 返回
+    goBack() {
+      this.attrValueList = [];
+      this.attr = {
+        attrName: "",
+        valueName: "",
+      };
+      this.$emit("updateIsShowAttrlist", true);
     },
   },
 };

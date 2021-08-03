@@ -36,3 +36,11 @@ export function reqUpdateTrademark(data) {
     data
   });
 }
+
+// 获取所有品牌
+export function reqGetAllTrademark() {
+  return request({
+    method: "GET",
+    url: `/admin/product/baseTrademark/getTrademarkList`
+  });
+}
