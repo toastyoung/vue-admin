@@ -28,3 +28,20 @@ export function reqSaveSpu(data) {
     data
   });
 }
+
+// 获取spu对应图片列表
+export function reqGeSpuImageList(spuId) {
+  return request({
+    method: "GET",
+    url: `/admin/product/spuImageList/${spuId}`
+  });
+}
+
+// 获取SPU数据
+
+export function reqGetSpuInfo(spuId) {
+  return request({
+    method: "GET",
+    url: `/admin/product/getSpuById/${spuId}`
+  });
+}

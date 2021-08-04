@@ -295,7 +295,12 @@ export default {
     setAttrValue(row) {
       const { attrValue } = this;
       if (attrValue) {
-        row.spuSaleAttrValueList.push({ saleAttrValueName: attrValue });
+        row.spuSaleAttrValueList.push({
+          saleAttrValueName: attrValue,
+          baseSaleAttrId: +row.baseSaleAttrId,
+          saleAttrName: row.saleAttrName,
+        });
+
         this.attrValue = "";
       }
       row.isEdit = false;

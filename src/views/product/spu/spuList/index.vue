@@ -24,7 +24,7 @@
               type="primary"
               icon="el-icon-plus"
               size="mini"
-              @click="$emit('updateIsShow',3)"
+              @click="addSku(row.id)"
             ></el-button>
           </el-tooltip>
 
@@ -73,6 +73,7 @@
 <script>
 import { mapState } from "vuex";
 import { reqGetSpuList } from "@/api/product/spu";
+import { mapMutations } from "vuex";
 export default {
   name: "SpuList",
   data() {
@@ -88,6 +89,7 @@ export default {
     ...mapState("category", ["category3Id"]),
   },
   methods: {
+    ...mapMutations("spu", ["SET_SPU_ID"]),
     // 获取spu列表
     async getSpuList() {
       const { category3Id, currentPage, pageSize } = this;
@@ -108,6 +110,11 @@ export default {
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
       this.getSpuList();
+    },
+    // 添加SKU
+    addSku(spuId) {
+      this.SET_SPU_ID(spuId);
+      this.$emit("updateIsShow", 3);
     },
   },
   watch: {
