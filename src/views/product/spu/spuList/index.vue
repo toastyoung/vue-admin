@@ -1,6 +1,10 @@
 <template>
   <el-card class="container">
-    <el-button type="primary" icon="el-icon-plus" :disabled="!category3Id"
+    <el-button
+      type="primary"
+      icon="el-icon-plus"
+      :disabled="!category3Id"
+      @click="$emit('updateIsShow', 2)"
       >添加SPU</el-button
     >
     <el-table
@@ -20,6 +24,7 @@
               type="primary"
               icon="el-icon-plus"
               size="mini"
+              @click="$emit('updateIsShow',3)"
             ></el-button>
           </el-tooltip>
 

@@ -2,7 +2,7 @@
   <el-card class="container">
     <el-form :model="spu" label-width="80px" :rules="rules" ref="form">
       <el-form-item label="SPU名称" prop="spuName">
-        <el-input v-model="spu.spuName"></el-input>
+        <el-input placeholder="请输入SPU名称" v-model="spu.spuName"></el-input>
       </el-form-item>
 
       <el-form-item label="SPU品牌" prop="tmId">
@@ -124,7 +124,7 @@
 
       <el-form-item>
         <el-button type="primary" @click="submit">确定</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="cancel">取消</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -132,7 +132,8 @@
 
 <script>
 import { reqGetAllTrademark } from "@/api/product/trademark";
-import { reqGetBaseSaleAttrList } from "@/api/product/spu";
+import { reqGetBaseSaleAttrList, reqSaveSpu } from "@/api/product/spu";
+import { mapState } from "vuex";
 
 export default {
   name: "AddOrUpdate",
@@ -161,6 +162,8 @@ export default {
         callback("每个销售属性都要至少添加一个属性值");
         return;
       }
+
+      callback();
     };
 
     return {
@@ -192,6 +195,9 @@ export default {
       baseSaleAttr: "", //选中的销售属性
       attrValue: "", //输入添加销售属性的值
     };
+  },
+  computed: {
+    ...mapState("category", ["category3Id"]),
   },
   async mounted() {
     const [trademarkListRes, baseSaleAttrListRes] = await Promise.allSettled([
@@ -298,8 +304,35 @@ export default {
     delSaleValue(saleAttrValueList, index) {
       saleAttrValueList.splice(index, 1);
     },
+    // 保存SPU
     submit() {
-      this.$refs.form.validate((valid) => {});
+      this.$refs.form.validate(async (valid) => {
+        if (valid) {
+          const { category3Id } = this;
+          const { description, spuImageList, spuName, spuSaleAttrList, tmId } =
+            this.spu;
+          const data = {
+            category3Id,
+            description,
+            spuImageList,
+            spuName,
+            spuSaleAttrList,
+            tmId,
+          };
+          await reqSaveSpu(data);
+
+          this.$message({
+            type: "success",
+            message: "添加SPU成功",
+          });
+
+          this.cancel();
+        }
+      });
+    },
+    // 返回列表页面
+    cancel() {
+      this.$emit("updateIsShow", 1);
     },
   },
 };
