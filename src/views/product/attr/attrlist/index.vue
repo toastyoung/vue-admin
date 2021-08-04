@@ -4,7 +4,7 @@
       type="primary"
       icon="el-icon-plus"
       :disabled="!category3Id"
-      @click="$emit('updateIsShowAttrlist', false)"
+      @click="$emit('updateIsShowAttrlist', false, false)"
       >添加属性</el-button
     >
     <el-table
@@ -34,7 +34,7 @@
               type="warning"
               icon="el-icon-edit"
               size="mini"
-              @click="$emit('updateIsShowAttrlist', false)"
+              @click="$emit('updateIsShowAttrlist', false, true)"
             ></el-button>
           </el-tooltip>
           <el-popconfirm

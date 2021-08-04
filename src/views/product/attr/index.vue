@@ -4,10 +4,12 @@
     <Attrlist
       v-if="isShowAttrlist"
       @updateIsShowAttrlist="updateIsShowAttrlist"
+
     />
     <AddOrUpdate
       v-if="!isShowAttrlist"
       @updateIsShowAttrlist="updateIsShowAttrlist"
+      :isShowUpdate="isShowUpdate"
     />
   </div>
 </template>
@@ -21,6 +23,7 @@ export default {
   data() {
     return {
       isShowAttrlist: true,
+      isShowUpdate: false,
     };
   },
   components: {
@@ -29,8 +32,9 @@ export default {
     AddOrUpdate,
   },
   methods: {
-    updateIsShowAttrlist(isShowAttrlist) {
+    updateIsShowAttrlist(isShowAttrlist,isShowUpdate) {
       this.isShowAttrlist = isShowAttrlist;
+      this.isShowUpdate = isShowUpdate
     },
   },
 };

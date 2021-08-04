@@ -76,6 +76,11 @@ export default {
         attrName: "",
         valueName: "",
       },
+      props: {
+        isShowUpdate: {
+          type: Boolean,
+        },
+      },
       rules: {
         attrName: [
           { required: true, message: "请输入属性名", trigger: "blur" },
