@@ -1,6 +1,6 @@
 <template>
   <el-card class="container">
-    <el-form :model="spu" label-width="80px" :rules="rules">
+    <el-form :model="spu" label-width="80px" :rules="rules" ref="form">
       <el-form-item label="SPU名称" prop="spuName">
         <el-input v-model="spu.spuName"></el-input>
       </el-form-item>
@@ -72,7 +72,35 @@
 
           <el-table-column prop="saleAttrName" label="属性名" width="100">
           </el-table-column>
-          <el-table-column prop="spuSaleAttrValueList" label="属性值列表">
+          <el-table-column label="属性值列表">
+            <template v-slot="{ row, $index }">
+              <el-tag
+                class="spu-tag"
+                v-for="(saleValue, index) in row.spuSaleAttrValueList"
+                :key="saleValue.saleAttrValueName"
+                closable
+                @close="delSaleValue(row.spuSaleAttrValueList, index)"
+                >{{ saleValue.saleAttrValueName }}
+              </el-tag>
+              <el-button
+                v-show="!row.isEdit"
+                size="mini"
+                icon="el-icon-plus"
+                @click="showEdit(row, $index)"
+                >添加属性值</el-button
+              >
+              <el-input
+                class="spu-sale-ipt"
+                :ref="$index"
+                v-show="row.isEdit"
+                size="mini"
+                placeholder="请输入属性值"
+                v-model="attrValue"
+                @blur="setAttrValue(row)"
+                @keyup.enter.native="$event.target.blur"
+              >
+              </el-input>
+            </template>
           </el-table-column>
           <el-table-column label="操作" width="100">
             <template v-slot="{ row, $index }">
@@ -95,7 +123,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="submit">确定</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
@@ -109,6 +137,32 @@ import { reqGetBaseSaleAttrList } from "@/api/product/spu";
 export default {
   name: "AddOrUpdate",
   data() {
+    const validator = (rule, value, callback) => {
+      /*
+        rule 规则名称 包含字段
+        value 校验值的情况
+        callback 必须要调用
+          callback() 通过
+          callback(xxx) 失败
+      */
+      //  销售属性
+      if (!this.spu.spuSaleAttrList.length) {
+        callback("请至少添加一个销售属性");
+        return;
+      }
+      //  销售属性值
+      const hasSpuSaleAttrValueList = this.spu.spuSaleAttrList.every(
+        (saleAttr) => {
+          return !!saleAttr.spuSaleAttrValueList.length;
+        }
+      );
+
+      if (!hasSpuSaleAttrValueList) {
+        callback("每个销售属性都要至少添加一个属性值");
+        return;
+      }
+    };
+
     return {
       spu: {
         spuName: "", //名称
@@ -121,15 +175,13 @@ export default {
         spuName: [
           { required: true, message: "请输入SPU名称", trigger: "blur" },
         ],
-        tmId: [{ required: true, message: "请选择SPU品牌", trigger: "blur" }],
+        tmId: [{ required: true, message: "请选择SPU品牌", trigger: "change" }],
         description: [
           { required: true, message: "请输入SPU描述", trigger: "blur" },
         ],
-        spuImageList: [
-          { required: true, message: "请上传SPU图片", trigger: "blur" },
-        ],
+        spuImageList: [{ required: true, message: "请上传SPU图片" }],
         spuSaleAttrList: [
-          { required: true, message: "请选择销售属性", trigger: "blur" },
+          { required: true, validator: validator, trigger: "blur" },
         ],
       },
       trademarkList: [],
@@ -138,6 +190,7 @@ export default {
       dialogVisible: false,
       baseApi: process.env.VUE_APP_BASE_API,
       baseSaleAttr: "", //选中的销售属性
+      attrValue: "", //输入添加销售属性的值
     };
   },
   async mounted() {
@@ -184,7 +237,7 @@ export default {
         imgUrl: res.data,
       });
 
-      // this.$refs.form.clearValidate(["logoUrl"]);
+      this.$refs.form.clearValidate(["spuImageList"]);
     },
     // 上传之前
     beforeAvatarUpload(file) {
@@ -204,7 +257,11 @@ export default {
     addSaleAttr() {
       // 增加销售属性
       const [baseSaleAttrId, saleAttrName] = this.baseSaleAttr.split(":");
-      this.spu.spuSaleAttrList.push({ baseSaleAttrId, saleAttrName });
+      this.spu.spuSaleAttrList.push({
+        baseSaleAttrId,
+        saleAttrName,
+        spuSaleAttrValueList: [],
+      });
       // 删除已添加
       this.baseSaleAttrList = this.baseSaleAttrList.filter(
         (saleAttr) => saleAttr.id !== +baseSaleAttrId
@@ -221,9 +278,38 @@ export default {
       });
       this.baseSaleAttrList.sort((a, b) => a.id - b.id);
     },
+    // 编辑模式
+    showEdit(row, index) {
+      this.$set(row, "isEdit", true);
+      this.$nextTick(() => {
+        this.$refs[index].focus();
+      });
+    },
+    // 设置属性值
+    setAttrValue(row) {
+      const { attrValue } = this;
+      if (attrValue) {
+        row.spuSaleAttrValueList.push({ saleAttrValueName: attrValue });
+        this.attrValue = "";
+      }
+      row.isEdit = false;
+    },
+    // 删除属性值
+    delSaleValue(saleAttrValueList, index) {
+      saleAttrValueList.splice(index, 1);
+    },
+    submit() {
+      this.$refs.form.validate((valid) => {});
+    },
   },
 };
 </script>
 
 <style>
+.spu-sale-ipt {
+  width: 150px;
+}
+.spu-tag {
+  margin-right: 10px;
+}
 </style>
