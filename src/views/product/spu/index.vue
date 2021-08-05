@@ -3,7 +3,7 @@
     <CategorySelector :disabled="isShow !== 1" />
     <SpuList v-if="isShow === 1" @updateIsShow="updateIsShow" />
     <AddOrUpdate v-if="isShow === 2" @updateIsShow="updateIsShow" />
-    <AddSku v-if="isShow === 3" />
+    <AddSku v-if="isShow === 3"  @updateIsShow="updateIsShow"  />
   </div>
 </template>
 
