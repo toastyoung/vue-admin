@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       // 1:spu列表  2:增/改SPU   3：增/改SKU
-      isShow: 3,
+      isShow: 1,
     };
   },
   methods: {

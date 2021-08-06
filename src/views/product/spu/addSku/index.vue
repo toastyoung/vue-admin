@@ -192,15 +192,14 @@ export default {
   },
   async mounted() {
     const { spuId, category1Id, category2Id, category3Id } = this;
-    console.log(category1Id, category2Id, category3Id);
     const [spuImageListRes, spuInfoRes, attrListReq] = await Promise.allSettled(
       [
         reqGeSpuImageList(spuId),
         reqGetSpuInfo(spuId),
         reqGetAttrList({
-          category1Id: 9,
-          category2Id: 58,
-          category3Id: 569,
+          category1Id,
+          category2Id,
+          category3Id,
         }),
       ]
     );
@@ -255,6 +254,7 @@ export default {
     // 提交SKU
     async submit() {
       const { category3Id, spuId } = this;
+      console.log(category3Id);
       const {
         price,
         weight,
@@ -301,7 +301,7 @@ export default {
             };
           }),
       };
-
+      console.log(data);
       await reqSaveSkuInfo(data);
 
       this.$message({
