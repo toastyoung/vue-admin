@@ -124,6 +124,8 @@ export default {
       })
     },
     handleLogin() {
+      // this.$API.user.login(this.loginForm)
+      // this.$router.push({ path: 'sku/list' })
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true
