@@ -4,40 +4,40 @@
     <Attrlist
       v-if="isShowAttrlist"
       @updateIsShowAttrlist="updateIsShowAttrlist"
-
     />
     <AddOrUpdate
       v-if="!isShowAttrlist"
-      @updateIsShowAttrlist="updateIsShowAttrlist"
       :isShowUpdate="isShowUpdate"
+      @updateIsShowAttrlist="updateIsShowAttrlist"
     />
   </div>
 </template>
 
 <script>
-import CategorySelector from "@/components/CategorySelector";
-import AddOrUpdate from "./addOrUpdate";
-import Attrlist from "./attrlist";
+import CategorySelector from '@/components/CategorySelector'
+import AddOrUpdate from './addOrUpdate'
+import Attrlist from './attrlist'
 export default {
-  name: "Attr",
-  data() {
-    return {
-      isShowAttrlist: true,
-      isShowUpdate: false,
-    };
-  },
+  name: 'Attr',
   components: {
     CategorySelector,
     Attrlist,
-    AddOrUpdate,
+    AddOrUpdate
   },
+  data() {
+    return {
+      isShowAttrlist: true,
+      isShowUpdate: false
+    }
+  },
+
   methods: {
-    updateIsShowAttrlist(isShowAttrlist,isShowUpdate) {
-      this.isShowAttrlist = isShowAttrlist;
+    updateIsShowAttrlist(isShowAttrlist, isShowUpdate) {
+      this.isShowAttrlist = isShowAttrlist
       this.isShowUpdate = isShowUpdate
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style>

@@ -1,22 +1,18 @@
 <template>
   <el-card class="container">
     <el-table
+      v-loading="loading"
       :data="skuList"
       border
       class="container-table"
-      v-loading="loading"
     >
-      <el-table-column
-        label="序号"
-        type="index"
-        width="50"
-        align="center"
-      ></el-table-column>
+      <el-table-column label="序号" type="index" width="50" align="center" />
 
-      <el-table-column prop="skuName" label="名称"></el-table-column>
-      <el-table-column prop="skuDesc" label="描述"></el-table-column>
+      <el-table-column prop="skuName" label="名称" />
+      <el-table-column prop="skuDesc" label="描述" />
       <el-table-column label="默认图片">
         <template v-slot="{ row }">
+          <!-- eslint-disable-next-line  -->
           <img
             :src="row.skuDefaultImg"
             :alt="row.skuName"
@@ -24,71 +20,71 @@
           />
         </template>
       </el-table-column>
-      <el-table-column prop="weight" label="重量(KG)"></el-table-column>
-      <el-table-column prop="price" label="价格(元)"></el-table-column>
+      <el-table-column prop="weight" label="重量(KG)" />
+      <el-table-column prop="price" label="价格(元)" />
       <el-table-column width="300" label="操作">
         <template v-slot="{ row }">
           <el-button
             :type="row.isSale ? 'info' : 'success'"
             size="mini"
             :icon="[`el-icon-${row.isSale ? 'bottom' : 'top'}`]"
-            >{{ row.isSale ? "下架" : "上架" }}</el-button
           >
-          <el-button type="warning" size="mini" icon="el-icon-edit"
-            >修改</el-button
-          >
-          <el-button type="danger" size="mini" icon="el-icon-delete"
-            >删除</el-button
-          >
+            {{ row.isSale ? '下架' : '上架' }}
+          </el-button>
+          <el-button type="warning" size="mini" icon="el-icon-edit">
+            修改
+          </el-button>
+          <el-button type="danger" size="mini" icon="el-icon-delete">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="[10, 20, 30, 40]"
       :page-size="pageSize"
       layout="prev, pager, next, jumper, total, sizes"
       :total="total"
-    >
-    </el-pagination>
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </el-card>
 </template>
 
 <script>
-import { reqGetSkuList } from "@/api/product/sku";
+import { reqGetSkuList } from '@/api/product/sku'
 export default {
-  name: "Sku",
+  name: 'Sku',
   data() {
     return {
       loading: false,
-      skuList: [{}],
+      skuList: [],
       pageSize: 10,
       currentPage: 1,
-      total: 0,
-    };
+      total: 0
+    }
+  },
+  mounted() {
+    this.getSkuList(this.currentPage, this.pageSize)
   },
   methods: {
     async getSkuList(currentPage, pageSize) {
-      const res = await reqGetSkuList(currentPage, pageSize);
-      this.skuList = res.records;
-      this.total = res.total;
+      const res = await reqGetSkuList(currentPage, pageSize)
+      this.skuList = res.records
+      this.total = res.total
     },
     handleSizeChange(pageSize) {
-      this.pageSize = pageSize;
-      this.getSkuList(this.currentPage, pageSize);
+      this.pageSize = pageSize
+      this.getSkuList(this.currentPage, pageSize)
     },
     handleCurrentChange(currentPage) {
-      this.currentPage = currentPage;
-      this.getSkuList(currentPage, this.pageSize);
-    },
-  },
-  mounted() {
-    this.getSkuList(this.currentPage, this.pageSize);
-  },
-};
+      this.currentPage = currentPage
+      this.getSkuList(currentPage, this.pageSize)
+    }
+  }
+}
 </script>
 
 <style>

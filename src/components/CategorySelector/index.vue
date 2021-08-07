@@ -12,8 +12,7 @@
             :key="c1.id"
             :label="c1.name"
             :value="c1.id"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="二级分类" class="category-form-item">
@@ -27,8 +26,7 @@
             :key="c2.id"
             :label="c2.name"
             :value="c2.id"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="三级分类" class="category-form-item">
@@ -42,8 +40,7 @@
             :key="c3.id"
             :label="c3.name"
             :value="c3.id"
-          >
-          </el-option>
+          ></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -51,38 +48,38 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
-  name: "CategorySelector",
+  name: 'CategorySelector',
   mounted() {
     // 请求一级分类
-    this.getCategory1List();
+    this.getCategory1List()
   },
   computed: {
-    ...mapState("category", [
-      "category1Id",
-      "category2Id",
-      "category3Id",
-      "category1List",
-      "category2List",
-      "category3List",
-    ]),
+    ...mapState('category', [
+      'category1Id',
+      'category2Id',
+      'category3Id',
+      'category1List',
+      'category2List',
+      'category3List'
+    ])
   },
   methods: {
-    ...mapActions("category", [
-      "getCategory1List",
-      "getCategory2List",
-      "getCategory3List",
+    ...mapActions('category', [
+      'getCategory1List',
+      'getCategory2List',
+      'getCategory3List'
     ]),
-    ...mapMutations("category", ["SET_CATEGORY3_ID"]),
+    ...mapMutations('category', ['SET_CATEGORY3_ID'])
   },
   props: {
     disabled: {
       type: Boolean,
-      default: false,
-    },
-  },
-};
+      default: false
+    }
+  }
+}
 </script>
 
 <style>

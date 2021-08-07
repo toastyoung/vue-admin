@@ -101,14 +101,17 @@
           class="container-table"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column width="50" type="selection" align="center">
-          </el-table-column>
+          <el-table-column
+            width="50"
+            type="selection"
+            align="center"
+          ></el-table-column>
           <el-table-column label="图片">
             <template v-slot="{ row }">
               <img :src="row.imgUrl" :alt="row.imgName" class="sku-img" />
             </template>
           </el-table-column>
-          <el-table-column label="名称" prop="imgName"> </el-table-column>
+          <el-table-column label="名称" prop="imgName"></el-table-column>
           <el-table-column label="操作">
             <template v-slot="{ row }">
               <el-button
@@ -116,15 +119,17 @@
                 size="mini"
                 v-show="row.isDefault === '0'"
                 @click="setDefaultImage(row)"
-                >设置默认图片</el-button
               >
+                设置默认图片
+              </el-button>
               <el-button
                 type="success"
                 size="mini"
                 v-show="row.isDefault === '1'"
                 disabled
-                >默认图片</el-button
               >
+                默认图片
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -139,13 +144,13 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { reqGetAttrList } from "@/api/product/attr";
-import { reqGeSpuImageList, reqGetSpuInfo } from "@/api/product/spu";
-import { reqSaveSkuInfo } from "@/api/product/sku";
+import { mapState } from 'vuex'
+import { reqGetAttrList } from '@/api/product/attr'
+import { reqGeSpuImageList, reqGetSpuInfo } from '@/api/product/spu'
+import { reqSaveSkuInfo } from '@/api/product/sku'
 
 export default {
-  name: "AddSku",
+  name: 'AddSku',
   data() {
     return {
       spu: {},
@@ -153,8 +158,8 @@ export default {
       sku: {
         price: 0, //价格
         weight: 0, //重量
-        skuName: "",
-        skuDesc: "", //描述
+        skuName: '',
+        skuDesc: '', //描述
         //平台属性列表
         skuAttrValueList: [
           //     {
@@ -164,7 +169,7 @@ export default {
           //       "valueName": "string"
           //     }
         ],
-        skuDefaultImg: "", // 默认图片
+        skuDefaultImg: '', // 默认图片
         // 选中图片列表
         skuImageList: [
           //     {
@@ -181,17 +186,17 @@ export default {
           //       "saleAttrValueId": 0,
           //       "saleAttrValueName": "string",
           //     }
-        ],
+        ]
       },
-      attrList: [],
-    };
+      attrList: []
+    }
   },
   computed: {
-    ...mapState("category", ["category1Id", "category2Id", "category3Id"]),
-    ...mapState("spu", ["spuId"]),
+    ...mapState('category', ['category1Id', 'category2Id', 'category3Id']),
+    ...mapState('spu', ['spuId'])
   },
   async mounted() {
-    const { spuId, category1Id, category2Id, category3Id } = this;
+    const { spuId, category1Id, category2Id, category3Id } = this
     const [spuImageListRes, spuInfoRes, attrListReq] = await Promise.allSettled(
       [
         reqGeSpuImageList(spuId),
@@ -199,62 +204,62 @@ export default {
         reqGetAttrList({
           category1Id,
           category2Id,
-          category3Id,
-        }),
+          category3Id
+        })
       ]
-    );
-    if (spuImageListRes.status === "fulfilled") {
+    )
+    if (spuImageListRes.status === 'fulfilled') {
       this.spuImageList = spuImageListRes.value.map((spuImage) => {
         return {
           ...spuImage,
-          isDefault: "0",
-        };
-      });
+          isDefault: '0'
+        }
+      })
     } else {
       this.$message({
-        type: "error",
-        message: "获取SPU图片列表数据失败",
-      });
+        type: 'error',
+        message: '获取SPU图片列表数据失败'
+      })
     }
 
-    if (spuInfoRes.status === "fulfilled") {
-      this.spu = spuInfoRes.value;
+    if (spuInfoRes.status === 'fulfilled') {
+      this.spu = spuInfoRes.value
     } else {
       this.$message({
-        type: "error",
-        message: "获取SPU数据失败",
-      });
+        type: 'error',
+        message: '获取SPU数据失败'
+      })
     }
 
-    if (attrListReq.status === "fulfilled") {
-      this.attrList = attrListReq.value;
+    if (attrListReq.status === 'fulfilled') {
+      this.attrList = attrListReq.value
     } else {
       this.$message({
-        type: "error",
-        message: "获取平台属性列表数据失败",
-      });
+        type: 'error',
+        message: '获取平台属性列表数据失败'
+      })
     }
   },
   methods: {
     // 手机图片数据
     handleSelectionChange(val) {
-      this.sku.skuImageList = val;
+      this.sku.skuImageList = val
     },
     // 设置默认图片
     setDefaultImage(row) {
       this.sku.skuImageList.forEach((skuImage) => {
-        skuImage.isDefault = "0";
-      });
-      row.isDefault = "1";
+        skuImage.isDefault = '0'
+      })
+      row.isDefault = '1'
     },
     // 返回spu列表页面
     cancel() {
-      this.$emit("updateIsShow", 1);
+      this.$emit('updateIsShow', 1)
     },
     // 提交SKU
     async submit() {
-      const { category3Id, spuId } = this;
-      console.log(category3Id);
+      const { category3Id, spuId } = this
+      console.log(category3Id)
       const {
         price,
         weight,
@@ -262,8 +267,8 @@ export default {
         skuDesc,
         skuAttrValueList,
         skuImageList,
-        skuSaleAttrValueList,
-      } = this.sku;
+        skuSaleAttrValueList
+      } = this.sku
       const data = {
         category3Id,
         spuId,
@@ -272,17 +277,17 @@ export default {
         skuName,
         skuDesc,
         // 默认图片
-        skuDefaultImg: skuImageList.find((img) => img.isDefault === "1").imgUrl,
+        skuDefaultImg: skuImageList.find((img) => img.isDefault === '1').imgUrl,
 
         // filter(Boolean) 清除空数据
         skuAttrValueList: skuAttrValueList.filter(Boolean).map((attr) => {
-          const [attrId, attrName, valueId, valueName] = attr.split(":");
+          const [attrId, attrName, valueId, valueName] = attr.split(':')
           return {
             attrId,
             attrName,
             valueId,
-            valueName,
-          };
+            valueName
+          }
         }),
         skuSaleAttrValueList: skuSaleAttrValueList
           .filter(Boolean)
@@ -291,28 +296,28 @@ export default {
               saleAttrId,
               saleAttrName,
               saleAttrValueId,
-              saleAttrValueName,
-            ] = saleAttr.split(":");
+              saleAttrValueName
+            ] = saleAttr.split(':')
             return {
               saleAttrId,
               saleAttrName,
               saleAttrValueId,
-              saleAttrValueName,
-            };
-          }),
-      };
-      console.log(data);
-      await reqSaveSkuInfo(data);
+              saleAttrValueName
+            }
+          })
+      }
+      console.log(data)
+      await reqSaveSkuInfo(data)
 
       this.$message({
-        type: "success",
-        message: "添加SKU成功",
-      });
+        type: 'success',
+        message: '添加SKU成功'
+      })
 
-      this.cancel();
-    },
-  },
-};
+      this.cancel()
+    }
+  }
+}
 </script>
 
 <style>

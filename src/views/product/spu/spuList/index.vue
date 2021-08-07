@@ -5,18 +5,18 @@
       icon="el-icon-plus"
       :disabled="!category3Id"
       @click="$emit('updateIsShow', 2)"
-      >添加SPU</el-button
     >
+      添加SPU
+    </el-button>
     <el-table
+      v-loading="loading"
       :data="spuList"
       border
       class="container-table"
-      v-loading="loading"
     >
-      <el-table-column label="序号" width="50" type="index" align="center">
-      </el-table-column>
-      <el-table-column prop="spuName" label="SPU名称"> </el-table-column>
-      <el-table-column prop="description" label="SPU描述"> </el-table-column>
+      <el-table-column label="序号" width="50" type="index" align="center" />
+      <el-table-column prop="spuName" label="SPU名称" />
+      <el-table-column prop="description" label="SPU描述" />
       <el-table-column label="操作">
         <template v-slot="{ row }">
           <el-tooltip content="添加SKU" placement="top">
@@ -25,19 +25,15 @@
               icon="el-icon-plus"
               size="mini"
               @click="addSku(row.id)"
-            ></el-button>
+            />
           </el-tooltip>
 
           <el-tooltip content="修改SKU" placement="top">
-            <el-button
-              type="warning"
-              icon="el-icon-edit"
-              size="mini"
-            ></el-button>
+            <el-button type="warning" icon="el-icon-edit" size="mini" />
           </el-tooltip>
 
           <el-tooltip content="查看SKU列表" placement="top">
-            <el-button type="info" icon="el-icon-info" size="mini"></el-button>
+            <el-button type="info" icon="el-icon-info" size="mini" />
           </el-tooltip>
 
           <el-popconfirm
@@ -46,94 +42,89 @@
             title="确定删除吗？"
             class="spu-list-confirm"
           >
-            <el-tooltip content="删除SPU" placement="top" slot="reference">
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                size="mini"
-              ></el-button>
+            <el-tooltip slot="reference" content="删除SPU" placement="top">
+              <el-button type="danger" icon="el-icon-delete" size="mini" />
             </el-tooltip>
           </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
       :current-page="currentPage"
       :page-sizes="[3, 6, 9, 12]"
       :page-size="pageSize"
       layout="prev, pager, next, jumper,total, sizes"
       :total="total"
-    >
-    </el-pagination>
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
   </el-card>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { reqGetSpuList } from "@/api/product/spu";
-import { mapMutations } from "vuex";
+import { mapState } from 'vuex'
+import { reqGetSpuList } from '@/api/product/spu'
+import { mapMutations } from 'vuex'
 export default {
-  name: "SpuList",
+  name: 'SpuList',
   data() {
     return {
       loading: false,
       spuList: [],
       currentPage: 1,
       pageSize: 3,
-      total: 0,
-    };
+      total: 0
+    }
   },
   computed: {
-    ...mapState("category", ["category3Id"]),
-  },
-  methods: {
-    ...mapMutations("spu", ["SET_SPU_ID"]),
-    // 获取spu列表
-    async getSpuList() {
-      const { category3Id, currentPage, pageSize } = this;
-      this.loading = true;
-      const res = await reqGetSpuList({
-        category3Id,
-        page: currentPage,
-        limit: pageSize,
-      });
-      this.loading = false;
-      this.spuList = res.records;
-      this.total = res.total;
-    },
-    handleSizeChange(pageSize) {
-      this.pageSize = pageSize;
-      this.getSpuList();
-    },
-    handleCurrentChange(currentPage) {
-      this.currentPage = currentPage;
-      this.getSpuList();
-    },
-    // 添加SKU
-    addSku(spuId) {
-      this.SET_SPU_ID(spuId);
-      this.$emit("updateIsShow", 3);
-    },
+    ...mapState('category', ['category3Id'])
   },
   watch: {
     category3Id: {
       handler(category3Id) {
         if (!category3Id) {
           // 重置数据
-          this.spuList = [];
-          this.total = 0;
-          this.currentPage = 1;
-          this.pageSize = 3;
-          return;
+          this.spuList = []
+          this.total = 0
+          this.currentPage = 1
+          this.pageSize = 3
+          return
         }
-        this.getSpuList();
+        this.getSpuList()
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
-};
+  methods: {
+    ...mapMutations('spu', ['SET_SPU_ID']),
+    // 获取spu列表
+    async getSpuList() {
+      const { category3Id, currentPage, pageSize } = this
+      this.loading = true
+      const res = await reqGetSpuList({
+        category3Id,
+        page: currentPage,
+        limit: pageSize
+      })
+      this.loading = false
+      this.spuList = res.records
+      this.total = res.total
+    },
+    handleSizeChange(pageSize) {
+      this.pageSize = pageSize
+      this.getSpuList()
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage
+      this.getSpuList()
+    },
+    // 添加SKU
+    addSku(spuId) {
+      this.SET_SPU_ID(spuId)
+      this.$emit('updateIsShow', 3)
+    }
+  }
+}
 </script>
 
 <style>
