@@ -114,12 +114,6 @@ export const constantRoutes = [
         name: 'Permission',
         component: () => import('@/views/acl/permission'),
         meta: { title: '菜单管理' }
-      },
-      {
-        path: 'sku/list',
-        name: 'Sku',
-        component: () => import('@/views/product/sku'),
-        meta: { title: 'Sku管理' }
       }
     ]
   },
