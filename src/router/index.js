@@ -90,6 +90,39 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/acl',
+    component: Layout,
+    redirect: '/acl/user/list',
+    name: 'Acl',
+    meta: { title: '权限管理', icon: 'password' },
+    children: [
+      {
+        path: 'user/list',
+        name: 'User',
+        component: () => import('@/views/acl/user'),
+        meta: { title: '用户管理' }
+      },
+      {
+        path: 'role/list',
+        name: 'Role',
+        component: () => import('@/views/acl/role'),
+        meta: { title: '角色管理' }
+      },
+      {
+        path: 'permission/list',
+        name: 'Permission',
+        component: () => import('@/views/acl/permission'),
+        meta: { title: '菜单管理' }
+      },
+      {
+        path: 'sku/list',
+        name: 'Sku',
+        component: () => import('@/views/product/sku'),
+        meta: { title: 'Sku管理' }
+      }
+    ]
+  },
 
   // {
   //   path: '/example',

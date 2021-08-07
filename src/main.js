@@ -14,6 +14,10 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import * as API from '@/api'
+
+// 把所有接口请求函数挂载在vue原型上
+Vue.prototype.$API = API
 
 /**
  * If you don't want to use mock-server

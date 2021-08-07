@@ -4,17 +4,17 @@
       <el-form-item label="SPU名称">{{ spu.spuName }}</el-form-item>
 
       <el-form-item label="SKU名称">
-        <el-input placeholder="请输入SKU名称" v-model="sku.skuName"></el-input>
+        <el-input v-model="sku.skuName" placeholder="请输入SKU名称" />
       </el-form-item>
 
       <el-form-item label="价格">
         <el-input-number
-          placeholder="请输入价格"
           v-model="sku.price"
+          placeholder="请输入价格"
           controls-position="right"
           :min="0"
           class="add-sku-inputNumber"
-        ></el-input-number>
+        />
       </el-form-item>
 
       <el-form-item label="重量">
@@ -24,16 +24,16 @@
           controls-position="right"
           :min="0"
           class="add-sku-inputNumber"
-        ></el-input-number>
+        />
       </el-form-item>
 
       <el-form-item label="SKU描述">
         <el-input
+          v-model="sku.skuDesc"
           type="textarea"
           :rows="3"
           placeholder="请输入SKU描述"
-          v-model="sku.skuDesc"
-        ></el-input>
+        />
       </el-form-item>
 
       <el-form-item label="平台属性">
@@ -50,15 +50,15 @@
           >
             <el-form-item :label="attr.attrName">
               <el-select
-                placeholder="请选择平台属性值"
                 v-model="sku.skuAttrValueList[index]"
+                placeholder="请选择平台属性值"
               >
                 <el-option
+                  v-for="attrValue in attr.attrValueList"
+                  :key="attrValue.id"
                   :label="attrValue.valueName"
                   :value="`${attr.id}:${attr.attrName}:${attrValue.id}:${attrValue.valueName}`"
-                  v-for="(attrValue, index) in attr.attrValueList"
-                  :key="attrValue.id"
-                ></el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -79,15 +79,15 @@
           >
             <el-form-item :label="saleAttr.saleAttrName">
               <el-select
-                placeholder="请选择销售属性值"
                 v-model="sku.skuSaleAttrValueList[index]"
+                placeholder="请选择销售属性值"
               >
                 <el-option
                   v-for="saleAttrValue in saleAttr.spuSaleAttrValueList"
+                  :key="saleAttrValue.id"
                   :label="saleAttrValue.saleAttrValueName"
                   :value="`${saleAttr.id}:${saleAttr.saleAttrName}:${saleAttrValue.id}:${saleAttrValue.saleAttrValueName}`"
-                  :key="saleAttrValue.id"
-                ></el-option>
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -101,31 +101,28 @@
           class="container-table"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column
-            width="50"
-            type="selection"
-            align="center"
-          ></el-table-column>
+          <el-table-column width="50" type="selection" align="center" />
           <el-table-column label="图片">
             <template v-slot="{ row }">
+              <!-- eslint-disable-next-line -->
               <img :src="row.imgUrl" :alt="row.imgName" class="sku-img" />
             </template>
           </el-table-column>
-          <el-table-column label="名称" prop="imgName"></el-table-column>
+          <el-table-column label="名称" prop="imgName" />
           <el-table-column label="操作">
             <template v-slot="{ row }">
               <el-button
+                v-show="row.isDefault === '0'"
                 type="primary"
                 size="mini"
-                v-show="row.isDefault === '0'"
                 @click="setDefaultImage(row)"
               >
                 设置默认图片
               </el-button>
               <el-button
+                v-show="row.isDefault === '1'"
                 type="success"
                 size="mini"
-                v-show="row.isDefault === '1'"
                 disabled
               >
                 默认图片
@@ -156,11 +153,11 @@ export default {
       spu: {},
       spuImageList: [],
       sku: {
-        price: 0, //价格
-        weight: 0, //重量
+        price: 0, //  价格
+        weight: 0, // 重量
         skuName: '',
-        skuDesc: '', //描述
-        //平台属性列表
+        skuDesc: '', // 描述
+        //  平台属性列表
         skuAttrValueList: [
           //     {
           //       "attrId": 0,
