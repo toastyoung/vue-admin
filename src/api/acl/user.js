@@ -64,7 +64,7 @@ export function getUser(id) {
 }
 
 // 删除管理用户
-export function removeUser(id) {
+export function removeUserId(id) {
   return request({
     method: 'DELETE',
     url: `${api_name}/remove/${id}`

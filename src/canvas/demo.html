@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="charts" width="800" height="500"></canvas>
+    <script>
+      const canvas = document.getElementById('charts')
+      const ctx = canvas.getContext('2d')
+
+      // 标题
+      ctx.font = "16px '楷体' "
+      ctx.fillText('柱形图', 80, 60)
+      ctx.textAlign = 'center'
+
+      // 坐标轴
+      ctx.moveTo(100, 100)
+      ctx.lineTo(100, 400)
+      ctx.lineTo(700, 400)
+
+      ctx.moveTo(100, 100)
+      ctx.lineTo(700, 100)
+
+      ctx.moveTo(100, 160)
+      ctx.lineTo(700, 160)
+
+      ctx.moveTo(100, 220)
+      ctx.lineTo(700, 220)
+
+      ctx.moveTo(100, 280)
+      ctx.lineTo(700, 280)
+
+      ctx.moveTo(100, 340)
+      ctx.lineTo(700, 340)
+      ctx.strokeStyle = 'black'
+      ctx.stroke()
+
+      // y轴数据
+      ctx.fillText('0', 60, 406)
+      ctx.moveTo(100, 100)
+      ctx.lineTo(105, 100)
+      ctx.fillText('150', 60, 106)
+
+      ctx.moveTo(100, 160)
+      ctx.lineTo(105, 160)
+      ctx.fillText('120', 60, 166)
+
+      ctx.moveTo(100, 220)
+      ctx.lineTo(105, 220)
+      ctx.fillText('90', 60, 226)
+
+      ctx.moveTo(100, 280)
+      ctx.lineTo(105, 280)
+      ctx.fillText('60', 60, 286)
+
+      ctx.moveTo(100, 340)
+      ctx.lineTo(105, 340)
+      ctx.fillText('30', 60, 346)
+
+      // x轴数据
+      ctx.moveTo(250, 400)
+      ctx.lineTo(250, 394)
+      ctx.fillText('春', 175, 416)
+
+      ctx.moveTo(400, 400)
+      ctx.lineTo(400, 394)
+      ctx.fillText('夏', 325, 416)
+
+      ctx.moveTo(550, 400)
+      ctx.lineTo(550, 394)
+      ctx.fillText('秋', 475, 416)
+
+      ctx.moveTo(700, 400)
+      ctx.lineTo(700, 394)
+      ctx.fillText('冬', 625, 416)
+      ctx.strokeStyle = 'pink'
+      ctx.stroke()
+
+      // 矩形
+      ctx.fillStyle = 'aqua'
+      ctx.fillRect(150, 220, 50, 180)
+
+      ctx.fillRect(300, 340, 50, 60)
+
+      ctx.fillRect(450, 160, 50, 240)
+
+      ctx.fillRect(600, 100, 50, 300)
+      ctx.stroke()
+    </script>
+  </body>
+</html>
